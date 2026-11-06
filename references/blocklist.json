@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "name": "Northstar fictional organisation starter reference",
+  "version": "1.0.0",
+  "reviewedOn": "2026-11-06",
+  "description": "A curated fictional example. Replace these terms with approved organisation-specific base terms before use.",
+  "terms": [
+    "northstar",
+    "northstarit",
+    "northstarcloud",
+    "nslabs",
+    "orion",
+    "harbor",
+    "cedar",
+    "helix",
+    "atlas",
+    "beacon",
+    "northport",
+    "westhaven",
+    "lakeside",
+    "starlab",
+    "nsportal",
+    "nshelpdesk",
+    "nsonboarding",
+    "starconnect",
+    "northacademy",
+    "nsworkspace"
+  ]
+}

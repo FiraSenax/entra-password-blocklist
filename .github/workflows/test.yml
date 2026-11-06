@@ -1,0 +1,39 @@
+name: Working example
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Load pinned Pester in the temporary workspace
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Save-Module -Name Pester -RequiredVersion 5.7.1 -Repository PSGallery -Path "$env:RUNNER_TEMP/modules" -Force
+      - name: Run fixture, normalization, error and collector tests
+        run: |
+          Import-Module "$env:RUNNER_TEMP/modules/Pester/5.7.1/Pester.psd1"
+          $result = Invoke-Pester -Path ./tests -Output Detailed -PassThru
+          if ($result.FailedCount -gt 0 -or $result.PassedCount -eq 0) { exit 1 }
+      - name: Run the local demonstration
+        run: ./examples/Compare-Demo.ps1
+      - name: Fetch this revision's real public reference
+        if: github.event_name != 'pull_request'
+        env:
+          REFERENCE_URI: https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/references/demo.json
+        run: ./Invoke-BlocklistCheck.ps1 -ReferenceUri $env:REFERENCE_URI
